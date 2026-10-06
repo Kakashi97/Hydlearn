@@ -1,0 +1,8 @@
+.git
+.env
+venv/
+db/
+**/__pycache__
+**/*.pyc
+app/uploads/
+app/flask_session/
