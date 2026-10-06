@@ -1,0 +1,44 @@
+#HydLearn{
+    font-family: "Oxygen";
+    font-weight: bolder;
+    color: #2253f5 !important;
+}
+
+.card-body a {
+  text-decoration: none; 
+  color: inherit;
+}
+
+  
+.carousel-item {
+    height: 33.55rem;
+}
+.carousel-caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.form-signin {
+    max-width: 350px;
+    margin: 0 auto;
+  }
+  
+.form-floating input {
+    width: 100%; /* Make form fields full width */
+}
+
+@media (max-width: 768px) {
+    nav {
+        height: 10vh; /* Adjust height for smaller screens */
+    }
+
+    nav .navbar-brand {
+        font-size: 1.2rem; /* Adjust font size for smaller screens */
+    }
+}
+
+.card:hover .img {
+  display: block;
+}

@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+{% block links %}
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.1/dist/quill.snow.css" rel="stylesheet" />
+{% endblock %}
+{% block title %}
+    Forums
+{% endblock %}
+
+{% block username %}
+    <a class="btn btn-light me-2 disabled">{{session['user_name']}}</a>
+{% endblock %}
+
+
+{% block main %}
+
+<section class="ms-2 me-2">
+    <div class="container p-3 mb-2 border rounded">
+        <h3 class="text-center">{{ post.title }}</h3>
+        <p>{{ post.content|safe }}</p>
+    </div>
+</section>
+
+<section class="ms-2 me-2 ">
+    <div class="container p-3 mb-2 border rounded">
+        {% for comment in comments %}
+        <div class="border-bottom">
+            <p>{{ comment.message|safe }}</p>
+            <h5 class="text-end">{{ comment.user_name}}</h5>
+            <p class="text-end date">{{ comment.date}}</p>
+        </div>
+        {% endfor %}
+        <form class="my-2" method="post">
+            <div class="mb-3">
+                <div id="editor" style="height: 200px;"></div>
+            </div>
+            <div class="mb-3 text-end">
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </div>
+        </form>     
+    </div>   
+</section>
+
+
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.1/dist/quill.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let images = document.querySelectorAll('img');
+    images.forEach(img => {
+        img.classList.add('img-fluid');
+    });
+});
+
+const toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['link', 'image'],
+
+        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'font': [] }],
+
+        ['clean']                                         // remove formatting button
+    ];
+            
+    const editor = new Quill('#editor', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        placeholder: "Add your comment...",
+        theme: 'snow'
+    });
+
+    document.querySelectorAll('option').forEach(opt => {
+            opt.innerHTML="&nbsp;";
+        });
+        
+    const form = document.querySelector('form');
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'message';
+    form.appendChild(hiddenInput);
+    form.addEventListener('submit', (event) => {
+    // Append Quill content before submitting
+    hiddenInput.value = editor.getSemanticHTML();
+    });
+
+    document.querySelectorAll(".date").forEach(function(element) {
+        const d = new Date(element.innerHTML);
+        element.innerHTML = d.toDateString();
+    });
+</script>
+    {% endblock %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Course
+{% endblock %}
+
+{% block username %}
+<a class="btn btn-light me-2 disabled">{{session['user_email']}}</a>
+{% endblock %}
+
+{% block main %}
+<div class="text-center mb-0">
+    <embed class="w-50" src="{{ url_for('view_pdf', id=id) }}" type="application/pdf" height="530"/>
+</div>
+
+{% endblock %}

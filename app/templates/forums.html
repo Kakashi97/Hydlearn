@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% block links %}
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.1/dist/quill.snow.css" rel="stylesheet" />
+{% endblock %}
+{% block title %}
+    Forums
+{% endblock %}
+
+{% block username %}
+    <a class="btn btn-light me-2 disabled">{{session['user_name']}}</a>
+{% endblock %}
+
+{% block main %}
+<section class="ms-2 me-2 ">
+    <div class="container p-3 mb-2 border rounded">
+        <h5 class="text-center">Start a new discussion</h5>
+        <form action="/forums" method="post">
+            <div class="mb-3">
+                <label for="post_title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="post_title" name="post_title" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Content</label>
+                <div id="editor" style="height: 200px;"></div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Post</button>
+            </div>
+        </form>
+    </div>
+</section>
+<section class="ms-2 me-2 ">
+    <div class="container">
+        {% for post in posts %}
+        <div class="row p-3 mb-2 border rounded">
+            <div class="col">
+                <a href="{{ url_for('post', id=post.id) }}" style="text-decoration: none; color: inherit;"><h4 class="text-primary" style="word-wrap: break-word;">{{ post.title }}</h4></a>
+                <h6>By: {{ post.user_name }}</h6>
+                <p class="date text-end">{{ post.date }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>   
+</section>
+    
+    
+
+    {% block scripts %}
+    <!-- Include the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.1/dist/quill.js"></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+    const toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['link', 'image'],
+
+        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'font': [] }],
+
+        ['clean']                                         // remove formatting button
+    ];
+            
+    const editor = new Quill('#editor', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        placeholder: "What's on your mind ?...",
+        theme: 'snow'
+    });
+
+    const form = document.querySelector('form');
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'post_content';
+    form.appendChild(hiddenInput);
+    form.addEventListener('submit', (event) => {
+    // Append Quill content before submitting
+    hiddenInput.value = editor.getSemanticHTML();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let images = document.querySelectorAll('img');
+        images.forEach(img => {
+            img.classList.add('img-fluid');
+        });
+        document.querySelectorAll('option').forEach(opt => {
+            opt.innerHTML="&nbsp;";
+        });
+    });
+
+    document.querySelectorAll(".date").forEach(function(element) {
+        const d = new Date(element.innerHTML);
+        element.innerHTML = d.toDateString();
+    });
+
+    </script>
+    {% endblock %}
+{% endblock %}

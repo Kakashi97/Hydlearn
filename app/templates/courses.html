@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Courses
+{% endblock %}
+
+{% block username %}
+<a class="btn btn-light me-2 disabled">{{session['user_name']}}</a>
+{% endblock %}
+
+{% block main %}
+<div class="album py-5">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {%for course in courses%}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <a  href="{{ url_for('course', id=course.id) }}"><img src="data:image/png;base64,{{ course.preview }}" class="bd-placeholder-img card-img-top" height="225" alt="Course_preview"></a>
+                    <div class="card-body">
+                        <a href="{{ url_for('course', id=course.id) }}" ><h5 class="card-title">{{ course.title }}</h5></a>
+                        <p class="card-text">{{ course.description }}</p>
+                    </div>
+                    {% if session['user_role']=='instructor' %}
+                    <div class="card-footer d-flex justify-content-between ">
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-secondary me-1" href="{{ url_for('course', id=course.id) }}">View</a>
+                        </div>
+                        <small class="text-muted">{{ course.instructor_name }}</small>
+                    </div>
+                    {% else %}
+                        <div class="card-footer d-flex justify-content-between ">
+                            <div class="btn-group">
+                                {% if course.id in enrollments %}
+                                    <a class="btn btn-sm btn-secondary me-1">Listed</a>
+                                {% else %}
+                                    <a class="btn btn-sm btn-primary me-1" href="{{ url_for('list', id=course.id) }}">Add to List</a>
+                                {% endif %} 
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

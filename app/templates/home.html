@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %}
+    HydLearn
+{% endblock %}
+
+{% block username %}
+<a class="btn btn-light me-2 disabled">{{session['user_name']}}</a>
+{% endblock %}
+
+{% block main %}
+
+<section class="album py-5">
+    <div class="container">
+        <h1 class="fw-light">Courses List</h1>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {%for course in courses%}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <a  href="{{ url_for('course', id=course.id) }}"><img src="data:image/png;base64,{{ course.preview }}" class="bd-placeholder-img card-img-top"  height="225" alt="Course_preview"></a>          
+                    <div class="card-body">
+                        <a href="{{ url_for('course', id=course.id) }}"><h5 class="card-title">{{ course.title }}</h5></a>
+                        <p class="card-text">{{ course.description }}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end ">
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ course.id }}">Remove</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="confirmDeleteModal{{ course.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ course.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="confirmDeleteModalLabel{{ course.id }}">Unlist</h5>
+                      <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to remove this course From your list?
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <a class="btn btn-danger" href="{{ url_for('unlist', id=course.id) }}">Remove</a>
+                    </div>
+                  </div>
+                </div>
+            </div>
+              
+            {%endfor%}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
