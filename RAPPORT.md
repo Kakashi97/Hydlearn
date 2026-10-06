@@ -3,7 +3,7 @@
 Application : Flask + PostgreSQL (migrée depuis SQLite). Deux services : `web` (Gunicorn) et `db` (PostgreSQL 16).
 Mesures prises sur ma machine : WSL (Ubuntu) sous Windows, Docker Desktop, projet situé dans `/mnt/c/...`.
 
-## 1. Image de base
+## Image de base
 
 J'ai retenu **`python:3.12-slim`** pour le service `web`.
 
@@ -11,13 +11,14 @@ J'ai retenu **`python:3.12-slim`** pour le service `web`.
 - `python:3.12-alpine`: la plus petite, mais des dépendances comme `psycopg2` peuvent nécessiter une compilation et des paquets système supplémentaires.
 - `python:3.12-slim` est un compromis : image officielle, glibc, et `psycopg2-binary` s'installe directement sans compilation.
 
-Le tag `3.12-slim` fixe la version mineure de Python (pas de saut de version involontaire). `postgres:16` fixe la version majeure de la base.
+Le tag `3.12-slim` fixe la version mineure de Python (pas de saut de version involontaire). 
+`postgres:16` fixe la version majeure de la base.
 
-## 2. Cache
+## Cache
 
 Les dépendances (qui changent rarement) sont installées avant la copie du code (qui change souvent). Quand je modifie une ligne de `app.py`, seule la couche `COPY app/ .` (et celles qui la suivent) est reconstruite ; 
 
-**Build 1 : `--no-cache` **
+**Build 1 : `--no-cache`**
 (Docker n'a aucune couche déjà construite à réutiliser. Il doit donc tout refaire depuis le début.)
 ```
 [+] Building 22.0s (12/12) FINISHED
@@ -30,7 +31,7 @@ user    0m0.587s
 sys     0m0.896s
 ```
 
-**Build 2 : aucun changement **
+**Build 2 : aucun changement**
 ```
 [+] Building 2.4s (12/12) FINISHED
 
@@ -54,7 +55,7 @@ sys     0m0.874s
 ```
 
 
-## 3. Taille
+## Taille
 
 Image `hydlearn-web:latest` :
 
@@ -83,7 +84,7 @@ docker compose exec db psql -U hydlearn -d hydlearn -c "SELECT id, name, role FR
 (1 row)
 ```
 
-**`docker compose down -v`** : le volume `pgdata` est aussi supprimé. Au `up` suivant, le dossier de données est vide : PostgreSQL se réinitialise (`initdb`) et exécute `init.sql`, qui recrée les 5 tables vides. Toutes les données sont perdues.
+**`docker compose down -v`** : le volume `pgdata` est aussi supprimé. Au `up` suivant, le dossier de données est vide : PostgreSQL se réinitialise (`initdb`) et exécute `init.sql`, qui recrée les tables vides. Toutes les données sont perdues.
 ```
  ✔ Volume hydlearn_pgdata   Removed
 ```
