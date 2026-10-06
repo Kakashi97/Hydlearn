@@ -36,7 +36,7 @@ Elles sont lues depuis le fichier `.env` (créé à à partir de `.env.example`,
 | `DB_HOST` | Nom du service de la base sur le réseau Compose. Doit rester `db`. |
 | `DB_PORT` | Port interne de PostgreSQL (`5432`). |
 | `DB_USER` | Utilisateur PostgreSQL créé au premier démarrage. |
-| `DB_PASSWORD` | Mot de passe technique utilisé par l'application pour se connecter à PostgreSQL. Sans lien avec les mots de passe des comptes du site. |
+| `DB_PASSWORD` | Mot de passe utilisé par l'application pour se connecter à PostgreSQL. Sans lien avec les mots de passe des comptes du site. |
 | `DB_NAME` | Nom de la base de données. |
 | `SECRET_KEY` | Clé secrète de Flask pour signer les sessions. |
 
